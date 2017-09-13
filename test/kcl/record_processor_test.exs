@@ -23,7 +23,7 @@ defmodule Kcl.RecordProcessorTest do
   end
 
   test "process_record is called in client module with decoded data" do
-    IOProxy.initialize open_io
+    IOProxy.initialize open_io()
     records = [create_record("Hello world!"), create_record("foobar")]
 
     assert MyProcessor.process_records(records) == ["I got Hello world!", "I got foobar"]
@@ -53,11 +53,12 @@ defmodule Kcl.RecordProcessorTest do
     MyProcessor.init_processor 1234
 
     assert MyProcessor.state[:largest_seq] == nil
-    assert_in_delta MyProcessor.state[:last_checkpoint_time], (Date.now |> Date.convert(:secs)), 1
+    assert_in_delta MyProcessor.state[:last_checkpoint_time],
+      (DateTime.utc_now |> Map.get(:second)), 2
   end
 
   test "forces checkpoint with largest_seq on error" do
-    io = open_io  "{}\n"
+    io = open_io("{}\n")
     IOProxy.initialize io
 
     records = [create_record("Break me")]
@@ -68,7 +69,7 @@ defmodule Kcl.RecordProcessorTest do
   end
 
   test "checkpoints on shutdown terminate" do
-    io = open_io  "{}\n"
+    io = open_io("{}\n")
     IOProxy.initialize io
 
     MyProcessor.shutdown "TERMINATE"
@@ -77,7 +78,7 @@ defmodule Kcl.RecordProcessorTest do
   end
 
   test "does not checkpoint if shutdown for other reason" do
-    io = open_io
+    io = open_io()
     IOProxy.initialize io
 
     MyProcessor.shutdown "FOO"
@@ -86,7 +87,7 @@ defmodule Kcl.RecordProcessorTest do
   end
 
   test "checkpoint retries specified number of times" do
-    io = open_io
+    io = open_io()
     IOProxy.initialize io
     MyProcessor.initialize checkpoint_retries: 3, largest_seq: 321
 

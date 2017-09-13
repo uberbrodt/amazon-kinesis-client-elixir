@@ -8,8 +8,8 @@ defmodule Kcl.KCLProcess do
   ]
 
   def run(processor, options \\ @default_options) do
-    options = Dict.merge(@default_options, options)
-    options |> Dict.take([:input, :output, :error])
+    options = Keyword.merge(@default_options, options)
+    options |> Keyword.take([:input, :output, :error])
     |> IOProxy.initialize
 
     process processor
