@@ -31,7 +31,7 @@ defmodule Kclex.Mixfile do
       {:inflex, "~> 1.0.0"},
       {:radpath, "~> 0.0.5"},
       {:tempfile, github: "lowks/tempfile"},
-      {:timex, "~> 3.1.24"},
+      {:timex, "~> 3.1.0"},
     ]
   end
 end
