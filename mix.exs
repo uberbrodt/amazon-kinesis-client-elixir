@@ -29,8 +29,8 @@ defmodule Kclex.Mixfile do
     [
       {:exjsx, "~> 3.1.0"},
       {:inflex, "~> 1.0.0"},
-      {:radpath, "~> 0.0.5"},
-      {:tempfile, github: "lowks/tempfile"},
+      #{:radpath, "~> 0.0.5"},
+      #{:tempfile, github: "lowks/tempfile"},
       {:timex, "~> 3.1.0"},
     ]
   end
