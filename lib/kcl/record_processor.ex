@@ -1,4 +1,5 @@
 defmodule Kcl.RecordProcessor do
+  @moduledoc false
   alias Kcl.IOProxy
   require Logger
   @default_options [
@@ -12,19 +13,18 @@ defmodule Kcl.RecordProcessor do
       import unquote(__MODULE__)
       use Timex
       require Logger
+      alias Kcl.RecordProcessor
 
       def initialize(options) do
-        Kcl.RecordProcessor.initialize options
+        RecordProcessor.initialize(options)
       end
 
       def process_records(records) do
-        try do
-          result = Enum.map records, &(handle_record(&1))
-          check_checkpoint(false)
-          result
-        rescue
+        result = Enum.map records, &(handle_record(&1))
+        check_checkpoint(false)
+        result
+      rescue
           e -> handle_processing_error(e)
-        end
       end
 
       defp handle_processing_error(e) do
@@ -45,7 +45,7 @@ defmodule Kcl.RecordProcessor do
       end
 
       def state do
-        Kcl.RecordProcessor.state
+        RecordProcessor.state
       end
 
       def init_processor(_) do
@@ -73,7 +73,8 @@ defmodule Kcl.RecordProcessor do
   end
 
   def initialize(options) do
-    Keyword.merge(@default_options, options)
+    @default_options
+    |> Keyword.merge(options)
     |> ensure_started
   end
 
@@ -109,7 +110,7 @@ defmodule Kcl.RecordProcessor do
   end
 
   defp do_checkpoint? do
-    (current_time() - last_checkpoint_time()) > state()[:checkpoint_freq_seconds] 
+    (current_time() - last_checkpoint_time()) > state()[:checkpoint_freq_seconds]
   end
 
   def check_checkpoint force_checkpoint do

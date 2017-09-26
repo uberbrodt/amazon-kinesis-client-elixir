@@ -1,20 +1,21 @@
 defmodule Kcl.IOProxy do
+  @moduledoc false
   def initialize io_streams = [input: _, output: _, error: _] do
     Agent.start_link(fn -> io_streams end, name: __MODULE__)
   end
 
   def read_line do
-    do_read io_streams[:input]
+    do_read io_streams()[:input]
   end
 
   def write_action(action_name, properties = %{}) do
     data = Enum.into(properties, [])
-    {:ok, json} = Keyword.put(data, :action, action_name) |> JSX.encode
-    IO.puts io_streams[:output], json
+    {:ok, json} = data |> Keyword.put(:action, action_name) |> JSX.encode
+    IO.puts(io_streams()[:output], json)
   end
 
   def write_error(message) do
-    IO.puts io_streams[:error], error_string(message)
+    IO.puts(io_streams()[:error], error_string(message))
   end
 
   defp error_string(message) when is_binary(message), do: message

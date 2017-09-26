@@ -1,4 +1,5 @@
 defmodule Kcl.KCLProcess do
+  @moduledoc false
   alias Kcl.IOProxy
 
   @default_options [
