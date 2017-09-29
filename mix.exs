@@ -28,7 +28,6 @@ defmodule Kclex.Mixfile do
   defp deps do
     [
       {:exjsx, "~> 3.1.0"},
-      {:inflex, "~> 1.0.0"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:timex, "~> 3.1.0"},
     ]
